@@ -20,6 +20,11 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->string('sku')->unique();
             $table->string('image');
+            $table->foreignId('unit_id')
+            ->constrained('units')
+            ->cascadeOnDelete();
+            $table->decimal('width', 10, 2)->nullable();
+            $table->decimal('height', 10, 2)->nullable();
             $table->longText('description')->nullable();
             $table->unsignedBigInteger('quantity');
             $table->decimal('buying_price', 10, 2);
