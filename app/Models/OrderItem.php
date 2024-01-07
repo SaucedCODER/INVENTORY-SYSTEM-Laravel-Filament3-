@@ -5,15 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Unit extends Model
+class OrderItem extends Model
 {
     use HasFactory;
+
     protected $fillable = [
-        'name', 'slug', 
+        'order_id', 'product_id', 'quantity', 'unit_price'
     ];
-    
-    public function products()
-    {
-        return $this->belongsToMany(Product::class)->withTimestamps();
-    }
 }
