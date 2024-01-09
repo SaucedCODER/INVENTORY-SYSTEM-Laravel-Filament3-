@@ -15,6 +15,7 @@ return new class extends Migration
                 $table->id();
                 $table->unsignedInteger('height');
                 $table->unsignedInteger('width');
+                $table->string('concat_size')->virtualAs('concat(height, \'x\', width)');
                 $table->timestamps();
         });
     }

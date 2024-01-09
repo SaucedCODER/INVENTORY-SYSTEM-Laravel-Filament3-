@@ -34,6 +34,16 @@ class ProductResource extends Resource
                         Forms\Components\MarkdownEditor::make('description')
                         ->columnSpan('full'),
                     ])->columns(2),
+                    Forms\Components\Section::make('Item Specifications')->schema([
+                        Forms\Components\Select::make('unit_id')
+                        ->label('Unit')
+                        ->required()
+                        ->multiple()
+                        ->relationship('units', 'name')->searchable(),
+                        Forms\Components\Select::make('size_id')
+                            ->label('Size')
+                            ->relationship('sizes', 'concat_size'),
+                    ])->columns(2),
                     Forms\Components\Section::make('Pricing & Stocks')->schema([
                         Forms\Components\TextInput::make('sku')
                         ->label('SKU')
@@ -49,47 +59,46 @@ class ProductResource extends Resource
                         ->required()
                         ->numeric(),
                     ])->columns(2),
-                    Forms\Components\Section::make('Other Details')->schema([
-                        Forms\Components\Select::make('unit_id')
-                        ->label('Unit')
-                        ->required()
-                        ->multiple()
-                        ->relationship('units', 'name')->searchable(),
-                        Forms\Components\TextInput::make('size_id')
-                            ->numeric(),
-                    ])->columns(2),
-                    
                 ]),
                 Forms\Components\Group::make()->schema([
-                    Forms\Components\Section::make('Status')->schema([
-                    Forms\Components\Toggle::make('is_visible')
-                    ->required(),
-                    Forms\Components\Toggle::make('is_featured')
-                    ->required(),
-                    Forms\Components\DatePicker::make('published_at')
-                    ->required()->columnSpan('full'),
-                    ])->columns(2),
-                ]),
-                // Forms\Components\TextInput::make('brand_id')
-                //     ->required()
-                //     ->numeric(),
-             
-            //     Forms\Components\Select::make('brand_id')
-            //     ->relationship('brand', 'name')
-            //     ->required(),
+                    Forms\Components\Section::make('Status')
+                    ->schema([
+                        Forms\Components\Toggle::make('is_visible')
+                            ->label('Visibility')
+                            ->helperText('Enable or disable product visibility')
+                            ->default(true),
 
-            // Forms\Components\Select::make('categories')
-            //     ->relationship('categories', 'name')
-            //     ->multiple()
-            //     ->required(),
-                
-                // Forms\Components\FileUpload::make('image')
-                //     ->image()
-                //     ->required(),
-                
-             
-              
-          
+                        Forms\Components\Toggle::make('is_featured')
+                            ->label('Featured')
+                            ->helperText('Enable or disable products featured status'),
+
+                        Forms\Components\DatePicker::make('published_at')
+                            ->label('Availability')
+                            ->default(now())
+                    ]),
+                    Forms\Components\Section::make('Image')
+                    ->schema([
+                        Forms\Components\FileUpload::make('image')
+                            ->directory('form-attachments')
+                            ->preserveFilenames()
+                            ->image()
+                            ->imageEditor()
+                    ])->collapsible(),
+
+                Forms\Components\Section::make('Connection')
+                    ->schema([
+                       Forms\Components\Select::make('brand_id')
+                            ->relationship('brands', 'name')
+                            ->required(),
+
+                        Forms\Components\Select::make('categories')
+                            ->relationship('categories', 'name')
+                            ->multiple()
+                            ->required(),
+                    ]),
+
+                ]),
+            
             ]);
     }
 
