@@ -12,7 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-
+use Illuminate\Support\Str;
 class ProductResource extends Resource
 {
     protected static ?string $model = Product::class;
@@ -27,26 +27,38 @@ class ProductResource extends Resource
                     Forms\Components\Section::make()->schema([
                         Forms\Components\TextInput::make('name')
                         ->required()
-                        ->maxLength(255),
+                        ->maxLength(255)
+                        ->live(onBlur: true)
+                        ->afterStateUpdated(function(string $operation, $state, Forms\Set $set) {
+                            if ($operation !== 'create') {
+                                return;
+                            }
+                            $set('slug', Str::slug($state));
+                        }),
                         Forms\Components\TextInput::make('slug')
-                        ->required()
-                        ->disabled(),
+                        ->disabled()
+                                    ->dehydrated()
+                                    ->required()
+                                    ->unique(Product::class, 'slug', ignoreRecord: true),
+                        
                         Forms\Components\MarkdownEditor::make('description')
                         ->columnSpan('full'),
                     ])->columns(2),
                     Forms\Components\Section::make('Item Specifications')->schema([
                         Forms\Components\Select::make('unit_id')
                         ->label('Unit')
+                        ->helperText('Specify the unit of measurement, e.g., inches, centimeters, etc.')
                         ->required()
                         ->multiple()
                         ->relationship('units', 'name')->searchable(),
                         Forms\Components\Select::make('size_id')
                             ->label('Size')
+                            ->helperText('Specify the size of the product, e.g., dimensions or measurements.')
                             ->relationship('sizes', 'concat_size'),
                     ])->columns(2),
                     Forms\Components\Section::make('Pricing & Stocks')->schema([
                         Forms\Components\TextInput::make('sku')
-                        ->label('SKU')
+                        ->label('SKU (Stocks Keeping Unit)') 
                         ->required()
                         ->maxLength(255),
                         Forms\Components\TextInput::make('quantity')
