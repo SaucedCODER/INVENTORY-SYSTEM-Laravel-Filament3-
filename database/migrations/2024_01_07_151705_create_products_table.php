@@ -23,8 +23,10 @@ return new class extends Migration
             $table->foreignId('unit_id')
             ->constrained('units')
             ->cascadeOnDelete();
-            $table->decimal('width', 10, 2)->nullable();
-            $table->decimal('height', 10, 2)->nullable();
+            $table->foreignId('size_id')
+            ->nullable()
+            ->constrained('sizes')
+            ->cascadeOnDelete();
             $table->longText('description')->nullable();
             $table->unsignedBigInteger('quantity');
             $table->decimal('buying_price', 10, 2);
