@@ -19,7 +19,7 @@ class Product extends Model
     {
         return $this->belongsTo(Brand::class);
     }
-    public function units(): BelongsToMany
+    public function units()
     {
         return $this->belongsToMany(Unit::class)->withTimestamps();
     }

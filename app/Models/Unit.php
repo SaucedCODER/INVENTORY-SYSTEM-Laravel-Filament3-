@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Unit extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'name', 'slug', 
     ];
@@ -16,4 +17,5 @@ class Unit extends Model
     {
         return $this->belongsToMany(Product::class)->withTimestamps();
     }
+
 }

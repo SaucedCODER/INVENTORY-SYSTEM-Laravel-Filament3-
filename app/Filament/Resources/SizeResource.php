@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\BrandResource\Pages;
-use App\Filament\Resources\BrandResource\RelationManagers;
-use App\Models\Brand;
+use App\Filament\Resources\SizeResource\Pages;
+use App\Filament\Resources\SizeResource\RelationManagers;
+use App\Models\Size;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,9 +13,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class BrandResource extends Resource
+class SizeResource extends Resource
 {
-    protected static ?string $model = Brand::class;
+    protected static ?string $model = Size::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -23,20 +23,12 @@ class BrandResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
+                Forms\Components\TextInput::make('height')
                     ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('slug')
+                    ->numeric(),
+                Forms\Components\TextInput::make('width')
                     ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('url')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('primary_hex')
-                    ->maxLength(255),
-                Forms\Components\Toggle::make('is_visible')
-                    ->required(),
-                Forms\Components\MarkdownEditor::make('description')
-                    ->columnSpanFull(),
+                    ->numeric(),
             ]);
     }
 
@@ -44,16 +36,12 @@ class BrandResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('slug')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('url')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('primary_hex')
-                    ->searchable(),
-                Tables\Columns\IconColumn::make('is_visible')
-                    ->boolean(),
+                Tables\Columns\TextColumn::make('height')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('width')
+                    ->numeric()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -87,10 +75,10 @@ class BrandResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListBrands::route('/'),
-            'create' => Pages\CreateBrand::route('/create'),
-            'view' => Pages\ViewBrand::route('/{record}'),
-            'edit' => Pages\EditBrand::route('/{record}/edit'),
+            'index' => Pages\ListSizes::route('/'),
+            'create' => Pages\CreateSize::route('/create'),
+            'view' => Pages\ViewSize::route('/{record}'),
+            'edit' => Pages\EditSize::route('/{record}/edit'),
         ];
     }
 }
