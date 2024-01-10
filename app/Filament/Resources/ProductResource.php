@@ -17,7 +17,11 @@ class ProductResource extends Resource
 {
     protected static ?string $model = Product::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-tag';
+
+    protected static ?int $navigationSort = 0;
+
+    protected static ?string $navigationGroup = 'Store';
 
     public static function form(Form $form): Form
     {
@@ -118,10 +122,8 @@ class ProductResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('image'),
                 Tables\Columns\TextColumn::make('brand_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('unit_id')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('size_id')
@@ -134,7 +136,7 @@ class ProductResource extends Resource
                 Tables\Columns\TextColumn::make('sku')
                     ->label('SKU')
                     ->searchable(),
-                Tables\Columns\ImageColumn::make('image'),
+         
                 Tables\Columns\TextColumn::make('quantity')
                     ->numeric()
                     ->sortable(),
@@ -161,16 +163,29 @@ class ProductResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\TernaryFilter::make('is_visible')
+                ->label('Visibility')
+                ->boolean()
+                ->trueLabel('Only Visible Products')
+                ->falseLabel('Only Hidden Products')
+                ->native(false),
+
+            Tables\Filters\SelectFilter::make('brand')
+                ->relationship('brand', 'name')
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make()
+                ])
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
+            ])->emptyStateActions([
+                Tables\Actions\CreateAction::make(),
             ]);
     }
 

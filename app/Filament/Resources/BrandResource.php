@@ -22,7 +22,7 @@ class BrandResource extends Resource
 
     protected static ?int $navigationSort = 1;
 
-    protected static ?string $navigationGroup = 'Shop';
+    protected static ?string $navigationGroup = 'Store';
 
     public static function form(Form $form): Form
     {

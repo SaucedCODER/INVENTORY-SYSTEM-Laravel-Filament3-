@@ -15,7 +15,7 @@ class Category extends Model
     protected $fillable = [
         'name', 'slug', 'parent_id', 'is_visible', 'description'
     ];
-
+    // tree like struture this for availability of assignments as parent and child
     public function parent(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'parent_id');
