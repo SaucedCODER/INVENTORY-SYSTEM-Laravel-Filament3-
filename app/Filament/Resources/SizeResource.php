@@ -33,6 +33,12 @@ class SizeResource extends Resource
                 Forms\Components\TextInput::make('width')
                     ->required()
                     ->numeric(),
+                    Forms\Components\TextInput::make('concat_size')
+                    ->disabled()
+                    ->label('Size')
+                    ->helperText('Auto-generated based on height and width.')
+                    ,
+                    
             ]);
     }
 
@@ -46,7 +52,11 @@ class SizeResource extends Resource
                 Tables\Columns\TextColumn::make('width')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
+                Tables\Columns\TextColumn::make('concat_size')
+                    ->label('Size')
+                    ->sortable()
+                    ->searchable(),
+                    Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -54,18 +64,25 @@ class SizeResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
+                 
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make()
+                ])
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
+            ])->emptyStateActions([
+                Tables\Actions\CreateAction::make(),
             ]);
     }
 
