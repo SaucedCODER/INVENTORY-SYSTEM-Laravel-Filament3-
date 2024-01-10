@@ -22,7 +22,7 @@ return new class extends Migration
             $table->enum('status', ['pending', 'processing', 'completed', 'declined'])
                 ->default('pending');
             $table->decimal('delivery_price')->nullable();
-            $table->longText('notes');
+            $table->longText('notes')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

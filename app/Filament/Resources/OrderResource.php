@@ -24,7 +24,7 @@ class OrderResource extends Resource
 
     protected static ?int $navigationSort = 3;
 
-    protected static ?string $navigationGroup = 'Shop';
+    protected static ?string $navigationGroup = 'Business Transactions';
 
     public static function getNavigationBadge(): ?string
     {
@@ -45,7 +45,8 @@ class OrderResource extends Resource
                 Forms\Components\Wizard::make([
                     Forms\Components\Wizard\Step::make('Order Details')
                         ->schema([
-                            Forms\Components\TextInput::make('number')
+                            Forms\Components\TextInput::make('receipt_no')
+                                ->label('Reciept No.')
                                 ->default('OR-' . random_int(100000, 9999999))
                                 ->disabled()
                                 ->dehydrated()
@@ -97,18 +98,36 @@ class OrderResource extends Resource
                                         ->label('Unit Price')
                                         ->dehydrated()
                                         ->live()
+                                        ->default(0)
                                         ->numeric()
                                         ->required(),
 
                                     Forms\Components\Placeholder::make('total_price')
                                         ->label('Total Price')
                                         ->content(function ($get) {
-                                            $quantity = (float) $get('quantity');
+                                            $quantity = (int) $get('quantity');
                                             $unitPrice = (float) $get('unit_price');
 
                                             return $quantity * $unitPrice;
                                         })
-                                ])->columns(4)
+                                ])->columns(4),
+                                Forms\Components\Section::make('Overall')
+                    ->schema([
+                        Forms\Components\Placeholder::make("Price")
+                                ->label("Price")
+                                ->content(function ($get) {
+                                    return collect($get('items'))
+                                        ->pluck('unit_price')
+                                        ->sum();
+                                }),
+                            Forms\Components\Placeholder::make("Number of Items")
+                                ->label("Number of Items")
+                                ->content(function ($get) {
+                                    return collect($get('items'))
+                                        ->pluck('unit_price')
+                                        ->count();
+                                })
+                    ])->columnSpan(2),
                         ])
                 ])->columnSpanFull()
             ]);
@@ -118,7 +137,7 @@ class OrderResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('number')
+                Tables\Columns\TextColumn::make('receipt_no')
                     ->searchable()
                     ->sortable(),
 

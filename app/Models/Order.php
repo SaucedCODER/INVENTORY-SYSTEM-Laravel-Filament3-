@@ -13,7 +13,7 @@ class Order extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'customer_id', 'number', 'total_price', 'status', 'delivery_price', 'notes'
+        'customer_id', 'receipt_no', 'total_price', 'status', 'delivery_price', 'notes'
     ];
 
     public function customer(): BelongsTo
