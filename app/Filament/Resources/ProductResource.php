@@ -55,7 +55,7 @@ class ProductResource extends Resource
                         ->required()
                         ->multiple()
                         ->relationship('units', 'name')->searchable(),
-                        Forms\Components\Select::make('size_id')
+                        Forms\Components\Select::make('sizes_id')
                             ->label('Size')
                             ->helperText('Specify the size of the product, e.g., dimensions or measurements.')
                             ->relationship('sizes', 'concat_size'),
@@ -103,7 +103,7 @@ class ProductResource extends Resource
 
                 Forms\Components\Section::make('Connection')
                     ->schema([
-                       Forms\Components\Select::make('brand_id')
+                       Forms\Components\Select::make('brands_id')
                             ->relationship('brands', 'name')
                             ->required(),
 
@@ -123,44 +123,24 @@ class ProductResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\ImageColumn::make('image'),
-                Tables\Columns\TextColumn::make('brand_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('size_id')
-                    ->numeric()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('slug')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('sku')
-                    ->label('SKU')
-                    ->searchable(),
-         
+                ->searchable(),
+                Tables\Columns\TextColumn::make('brands.name')->sortable(),
+                Tables\Columns\TextColumn::make('sizes.concat_size')->sortable(),
                 Tables\Columns\TextColumn::make('quantity')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('buying_price')
-                    ->numeric()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('selling_price')
+                    ->label('Price')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\IconColumn::make('is_visible')
-                    ->boolean(),
-                Tables\Columns\IconColumn::make('is_featured')
+                    ->label('Visibility')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('published_at')
                     ->date()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+            
             ])
             ->filters([
                 Tables\Filters\TernaryFilter::make('is_visible')
@@ -170,8 +150,8 @@ class ProductResource extends Resource
                 ->falseLabel('Only Hidden Products')
                 ->native(false),
 
-            Tables\Filters\SelectFilter::make('brand')
-                ->relationship('brand', 'name')
+            Tables\Filters\SelectFilter::make('brands_id')
+                ->relationship('brands', 'name')
             ])
             ->actions([
                 Tables\Actions\ActionGroup::make([

@@ -10,7 +10,7 @@ class Size extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['height', 'width'];
+    protected $fillable = ['height', 'width','concat_size'];
 
     public function products(): HasMany
     {
