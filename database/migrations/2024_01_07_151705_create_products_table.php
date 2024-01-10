@@ -20,9 +20,6 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->string('sku')->unique();
             $table->string('image');
-            $table->foreignId('unit_id')
-            ->constrained('units')
-            ->cascadeOnDelete();
             $table->foreignId('size_id')
             ->nullable()
             ->constrained('sizes')

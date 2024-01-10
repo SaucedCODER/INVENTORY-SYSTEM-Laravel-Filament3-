@@ -45,7 +45,7 @@ class ProductResource extends Resource
                         ->columnSpan('full'),
                     ])->columns(2),
                     Forms\Components\Section::make('Item Specifications')->schema([
-                        Forms\Components\Select::make('unit_id')
+                        Forms\Components\Select::make('units')
                         ->label('Unit')
                         ->helperText('Specify the unit of measurement, e.g., inches, centimeters, etc.')
                         ->required()

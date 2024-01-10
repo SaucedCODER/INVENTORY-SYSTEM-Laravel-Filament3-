@@ -12,7 +12,7 @@ class Product extends Model
     use HasFactory;
 
     protected $fillable = [
-        'brand_id', 'name', 'slug', 'sku', 'description', 'image', 'quantity','unit_id','size_id','buying_price','selling_price', 'is_visible', 'is_featured',  'published_at'
+        'brand_id', 'name', 'slug', 'sku', 'description', 'image', 'quantity','size_id','buying_price','selling_price', 'is_visible', 'is_featured',  'published_at'
     ];
 
     public function brands(): BelongsTo
@@ -21,11 +21,11 @@ class Product extends Model
     }
     public function units()
     {
-        return $this->belongsToMany(Unit::class)->withTimestamps();
+        return $this->belongsToMany(Unit::class);
     }
     public function categories(): BelongsToMany
     {
-        return $this->belongsToMany(Category::class)->withTimestamps();
+        return $this->belongsToMany(Category::class);
     }
     public function sizes()
     {
