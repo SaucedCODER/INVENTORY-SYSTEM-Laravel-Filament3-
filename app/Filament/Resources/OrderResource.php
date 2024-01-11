@@ -50,7 +50,8 @@ class OrderResource extends Resource
                                 ->default('OR-' . random_int(100000, 9999999))
                                 ->disabled()
                                 ->dehydrated()
-                                ->required(),
+                                ->required()
+                                ,
 
                             Forms\Components\Select::make('customer_id')
                                 ->relationship('customer', 'name')
@@ -63,7 +64,7 @@ class OrderResource extends Resource
                                 ->numeric()
                                 ->required(),
 
-                            Forms\Components\Select::make('type')
+                            Forms\Components\Select::make('status')->label('Status')
                             ->options([
                                 'pending' => OrderStatusEnum::PENDING->value,
                                 'processing' => OrderStatusEnum::PROCESSING->value,
@@ -102,29 +103,40 @@ class OrderResource extends Resource
                                         ->numeric()
                                         ->required(),
 
-                                    Forms\Components\Placeholder::make('total_price')
-                                        ->label('Total Price')
+                                        Forms\Components\Placeholder::make('total')
+                                        ->label('Item Total')
+                                        ->dehydrated()
+                                        ->default(0)
+                                        ->disabled() // Disable user input since it's calculated
                                         ->content(function ($get) {
                                             $quantity = (int) $get('quantity');
                                             $unitPrice = (float) $get('unit_price');
-
+                                    
                                             return $quantity * $unitPrice;
                                         })
+                                        ->helperText(
+                                            'This field is automatically calculated based on the Quantity and Unit Price.'
+                                        )
+                                    
                                 ])->columns(4),
                                 Forms\Components\Section::make('Overall')
                     ->schema([
                         Forms\Components\Placeholder::make("Price")
                                 ->label("Price")
                                 ->content(function ($get) {
-                                    return collect($get('items'))
-                                        ->pluck('unit_price')
-                                        ->sum();
+
+                                    $CalculateTotal = collect($get('items'))->map(function ($item) {
+                                        return $item['quantity'] * $item['unit_price'];
+                                    })->sum();
+                                    
+
+                                    return $CalculateTotal;
                                 }),
                             Forms\Components\Placeholder::make("Number of Items")
                                 ->label("Number of Items")
                                 ->content(function ($get) {
                                     return collect($get('items'))
-                                        ->pluck('unit_price')
+                                        ->pluck('total')
                                         ->count();
                                 })
                     ])->columnSpan(2),
@@ -139,7 +151,10 @@ class OrderResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('receipt_no')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->copyable()
+                    ->copyMessage('Reciept Number copied')
+                    ->copyMessageDuration(1500),
 
                 Tables\Columns\TextColumn::make('customer.name')
                     ->searchable()
