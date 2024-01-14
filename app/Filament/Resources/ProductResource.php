@@ -53,7 +53,6 @@ class ProductResource extends Resource
                         ->label('Unit')
                         ->helperText('Specify the unit of measurement, e.g., inches, centimeters, etc.')
                         ->required()
-                        ->multiple()
                         ->relationship('units', 'name')->searchable(),
                         Forms\Components\Select::make('sizes_id')
                             ->label('Size')

@@ -21,7 +21,7 @@ class Product extends Model
     }
     public function units()
     {
-        return $this->belongsToMany(Unit::class);
+        return $this->belongsTo(Unit::class);
     }
     public function categories(): BelongsToMany
     {
@@ -30,5 +30,9 @@ class Product extends Model
     public function sizes(): BelongsTo
     {
         return $this->belongsTo(Size::class);
+    }
+    public function unitConvertions(): BelongsToMany
+    {
+        return $this->belongsToMany(unitConvertion::class);
     }
 }

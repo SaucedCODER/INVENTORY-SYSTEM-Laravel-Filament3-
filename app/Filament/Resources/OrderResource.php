@@ -102,6 +102,13 @@ class OrderResource extends Resource
                                         ->default(0)
                                         ->numeric()
                                         ->required(),
+                                        Forms\Components\TextInput::make('unit_price')
+                                        ->label('Unit Price')
+                                        ->dehydrated()
+                                        ->live()
+                                        ->default(0)
+                                        ->numeric()
+                                        ->required(),
 
                                         Forms\Components\Placeholder::make('total')
                                         ->label('Item Total')
@@ -118,7 +125,7 @@ class OrderResource extends Resource
                                             'This field is automatically calculated based on the Quantity and Unit Price.'
                                         )
                                     
-                                ])->columns(4),
+                                ])->columns(5),
                                 Forms\Components\Section::make('Overall')
                     ->schema([
                         Forms\Components\Placeholder::make("Price")
